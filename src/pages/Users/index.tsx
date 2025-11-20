@@ -4,7 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Search, Filter, MoreVertical } from "lucide-react";
-import { CustomDrawer } from "@/components/ui/custom-drawer";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -167,57 +173,60 @@ export default function Users() {
         </div>
       </div>
 
-      {/* User Detail Drawer */}
-      <CustomDrawer
-        open={!!selectedUser}
-        onClose={() => setSelectedUser(null)}
-        title={selectedUser?.name || ""}
-      >
-        {selectedUser && (
-          <div className="space-y-6">
-            <div className="space-y-4">
-              <div>
-                <p className="text-sm text-muted-foreground">Email</p>
-                <p className="text-foreground">{selectedUser.email}</p>
+      {/* User Detail Modal */}
+      <Dialog open={!!selectedUser} onOpenChange={() => setSelectedUser(null)}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>{selectedUser?.name}</DialogTitle>
+            <DialogDescription>View and manage user details</DialogDescription>
+          </DialogHeader>
+          
+          {selectedUser && (
+            <div className="space-y-6">
+              <div className="space-y-4">
+                <div>
+                  <p className="text-sm text-muted-foreground">Email</p>
+                  <p className="text-foreground">{selectedUser.email}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Role</p>
+                  <p className="text-foreground">{selectedUser.role}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Status</p>
+                  <Badge className={getStatusColor(selectedUser.status)}>
+                    {selectedUser.status}
+                  </Badge>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Created At</p>
+                  <p className="text-foreground">{selectedUser.createdAt}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Last Login</p>
+                  <p className="text-foreground">{selectedUser.lastLogin}</p>
+                </div>
               </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Role</p>
-                <p className="text-foreground">{selectedUser.role}</p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Status</p>
-                <Badge className={getStatusColor(selectedUser.status)}>
-                  {selectedUser.status}
-                </Badge>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Created At</p>
-                <p className="text-foreground">{selectedUser.createdAt}</p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Last Login</p>
-                <p className="text-foreground">{selectedUser.lastLogin}</p>
-              </div>
-            </div>
 
-            <div className="pt-6 border-t border-border space-y-3">
-              <Button
-                onClick={() => handleEditUser(selectedUser)}
-                className="w-full bg-primary hover:bg-primary/90"
-              >
-                Edit User
-              </Button>
-              <Button
-                onClick={() => setUserToDelete(selectedUser)}
-                variant="destructive"
-                className="w-full"
-              >
-                Delete User
-              </Button>
+              <div className="pt-6 border-t border-border space-y-3">
+                <Button
+                  onClick={() => handleEditUser(selectedUser)}
+                  className="w-full bg-primary hover:bg-primary/90"
+                >
+                  Edit User
+                </Button>
+                <Button
+                  onClick={() => setUserToDelete(selectedUser)}
+                  variant="destructive"
+                  className="w-full"
+                >
+                  Delete User
+                </Button>
+              </div>
             </div>
-          </div>
-        )}
-      </CustomDrawer>
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={!!userToDelete} onOpenChange={() => setUserToDelete(null)}>
